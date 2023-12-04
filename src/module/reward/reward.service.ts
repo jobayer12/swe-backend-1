@@ -1,10 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reward } from '../../entities/Reward';
-import { LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { AddRewardDto } from './dto/add-reward.dto';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RewardFilter } from './dto/filter/reward.filter';
-import { SearchCondition } from 'src/common/enum/SearchCondition';
+import { SearchCondition } from '../../common/enum/SearchCondition';
 
 @Injectable()
 export class RewardService {
@@ -16,7 +16,7 @@ export class RewardService {
     try {
       return this.rewardRepository.save(payload);
     } catch (error) {
-      throw new Error(`Failed to save reward due to ${error?.message}`);
+      throw new HttpException(`Failed to save reward due to ${error?.message}`, HttpStatus.NOT_ACCEPTABLE);
     }
   }
 
@@ -29,22 +29,20 @@ export class RewardService {
           sql.andWhere('reward.id = :id', { id: filter?.id?.value });
         } else if (filter?.id?.condition === SearchCondition.IN && Array.isArray(filter?.id?.value) && filter?.id?.value?.length > 0) {
           sql.andWhere('reward.id IN :id', { id: filter?.id?.value });
-        } else if (filter?.id?.condition === SearchCondition.GREATER_THAN) {
-          sql.andWhere('reward.id > :id', { id: filter?.id?.value })
-        } else if (filter?.id?.condition === SearchCondition.LESS_THAN) {
-          sql.andWhere('reward.id < :id', { id: filter?.id?.value })
         }
       }
 
       if (filter?.date?.value?.startDate && filter?.date?.value?.endDate) {
         if (filter?.date?.condition === SearchCondition.BETWEEN) {
           sql.andWhere({
-            endDate: MoreThanOrEqual(filter?.date.value.startDate),
-            startDate: LessThanOrEqual(filter?.date.value.endDate),
+            endDate: MoreThanOrEqual(new Date(filter?.date.value.startDate)),
+            startDate: LessThanOrEqual(new Date(filter?.date.value.endDate)),
           });
         }
       }
     }
+    console.log(filter)
+    console.log(sql.getSql())
     return sql.getOne();
   }
 }

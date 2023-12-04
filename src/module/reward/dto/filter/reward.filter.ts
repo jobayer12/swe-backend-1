@@ -13,10 +13,10 @@ export class RewardIdFilter extends BaseFilter {
 
 export class RewardDate {
   @IsDateString()
-  startDate: Date;
+  startDate: string;
 
   @IsDateString()
-  endDate: Date;
+  endDate: string;
 }
 
 export class RewardDateFilter extends BaseFilter {

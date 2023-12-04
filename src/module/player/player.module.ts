@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { PlayerController } from './player.controller';
-import { Player } from 'src/entities/Player';
+import { Player } from '../../entities/Player';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()

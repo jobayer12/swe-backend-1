@@ -1,17 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import * as request from 'supertest';
 
 describe('AppController', () => {
   let appController: AppController;
+  let appService: AppService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const controller: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [{
+        provide: AppService,
+        useValue: {
+          couponRedeem: jest.fn
+        }
+      }],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = controller.get<AppController>(AppController);
+    appService = controller.get<AppService>(AppService);
   });
 
   describe('root', () => {
@@ -19,4 +27,5 @@ describe('AppController', () => {
       expect(appController.getHello()).toBe('Hello World!');
     });
   });
+
 });

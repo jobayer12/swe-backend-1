@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { PlayerCouponController } from './player-coupon.controller';
 import { PlayerCouponService } from './player-coupon.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PlayerCoupon } from 'src/entities/PlayerCoupon';
+import { PlayerCoupon } from '../../entities/PlayerCoupon';
 
 @Global()
 @Module({

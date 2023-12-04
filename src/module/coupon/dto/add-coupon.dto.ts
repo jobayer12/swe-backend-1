@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString, MaxLength } from "class-validator";
+import { IsNumber, IsString, MaxLength, Min } from "class-validator";
 
 export class AddCouponDto {
   @ApiProperty({ example: 'coupon1' })
@@ -9,5 +9,6 @@ export class AddCouponDto {
 
   @ApiProperty({ example: 1 })
   @IsNumber()
+  @Min(1)
   rewardId: number;
 }

@@ -5,9 +5,10 @@ import { Repository } from 'typeorm';
 import { AddCouponDto } from './dto/add-coupon.dto';
 import { RewardService } from '../reward/reward.service';
 import { RewardFilter, RewardIdFilter } from '../reward/dto/filter/reward.filter';
-import { SearchCondition } from 'src/common/enum/SearchCondition';
+import { SearchCondition } from '../../common/enum/SearchCondition';
 import { CouponFilter } from './dto/coupon.filter';
 import { PlayerCoupon } from '../../entities/PlayerCoupon';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class CouponService {
@@ -25,10 +26,6 @@ export class CouponService {
           sql.andWhere('coupon.id = :id', { id: filter?.id?.value });
         } else if (filter?.id?.condition === SearchCondition.IN && Array.isArray(filter?.id?.value) && filter?.id?.value?.length > 0) {
           sql.andWhere('coupon.id IN :id', { id: filter?.id?.value });
-        } else if (filter?.id?.condition === SearchCondition.GREATER_THAN) {
-          sql.andWhere('coupon.id > :id', { id: filter?.id?.value })
-        } else if (filter?.id?.condition === SearchCondition.LESS_THAN) {
-          sql.andWhere('coupon.id < :id', { id: filter?.id?.value })
         }
       }
 
@@ -37,10 +34,6 @@ export class CouponService {
           sql.andWhere('coupon.rewardId = :id', { id: filter?.reward?.value });
         } else if (filter?.reward?.condition === SearchCondition.IN && Array.isArray(filter?.reward?.value) && filter?.reward?.value?.length > 0) {
           sql.andWhere('coupon.rewardId IN :id', { id: filter?.reward?.value });
-        } else if (filter?.reward?.condition === SearchCondition.GREATER_THAN) {
-          sql.andWhere('coupon.rewardId > :id', { id: filter?.reward?.value })
-        } else if (filter?.reward?.condition === SearchCondition.LESS_THAN) {
-          sql.andWhere('coupon.rewardId < :id', { id: filter?.reward?.value })
         }
       }
     }
@@ -64,6 +57,10 @@ export class CouponService {
 
   async createCoupon(payload: AddCouponDto): Promise<Coupon> {
     try {
+      const errors = await validate(payload);
+      if (errors?.length > 0) {
+        throw new Error(errors.join(','));
+      }
       const filter = new RewardFilter();
       filter.id = new RewardIdFilter(payload.rewardId, SearchCondition.EQUAL);
       const reward = await this.rewardService.get(filter);

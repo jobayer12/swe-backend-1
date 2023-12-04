@@ -9,13 +9,17 @@ export class AddRewardDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ example: new Date() })
+  @ApiProperty({
+    example: new Date(
+      new Date().setUTCHours(0, 0, 0, 0)
+    )
+  })
   @IsDateString()
   startDate: Date;
 
   @ApiProperty({
     example: new Date(
-      new Date().setDate(new Date().getDate() + 7)
+      new Date(new Date().setDate(new Date().getDate() + 7)).setUTCHours(23, 59, 59)
     )
   })
   @IsDateString()

@@ -3,5 +3,5 @@ export enum SearchCondition {
   EQUAL = 'EQUAL',
   LESS_THAN = 'LESS_THAN',
   GREATER_THAN = 'GREATER_THAN',
-  BETWEEN = 'BETWEENs'
+  BETWEEN = 'BETWEEN'
 }

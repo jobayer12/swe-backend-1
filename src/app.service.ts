@@ -21,32 +21,31 @@ export class AppService {
   ) { }
 
   async couponRedeem(payload: AddCouponRedeemDto): Promise<CouponRedeemResponseDto> {
+    // get player by playerId
     const player: Player = await this.playerService.getPlayerById(payload.playerId);
     if (!player) {
       throw new HttpException(`Player doesn't exists.`, HttpStatus.NOT_FOUND);
     }
 
-
-    const availableCoupon = await this.couponService.getAvailableCouponByPlayerId(payload.playerId, payload.rewardId);
-    if (!availableCoupon) {
-      throw new HttpException(`No coupon available right now.`, HttpStatus.NOT_FOUND);
-    }
-
+    /**
+     * get reward by rewardId and it's handling a date range condition for filtering results based on the endDate and startDate properties. 
+     */
     const filter = new RewardFilter();
     filter.id = new RewardIdFilter(payload.rewardId, SearchCondition.EQUAL);
 
-    const date = new Date();
     const rewardDate = new RewardDate();
-    date.setHours(0, 0, 0)
-    rewardDate.startDate = date;
-    date.setHours(23, 59, 59);
-    rewardDate.endDate = date;
+    rewardDate.startDate = new Date().toISOString();
+    rewardDate.endDate = new Date().toISOString();
     filter.date = new RewardDateFilter(rewardDate, SearchCondition.BETWEEN);
-
     const reward = await this.rewardService.get(filter);
     if (!reward) {
       throw new HttpException(`Reward doesn't exists.`, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * get all playercoupon by playerId, rewardId
+     * Then check the total limit.
+     */
     let playerCouponFilter = new PlayerCouponFilter();
     playerCouponFilter.player = new PlayerFilter(payload.playerId, SearchCondition.EQUAL);
     playerCouponFilter.reward = new RewardIdFilter(reward.id, SearchCondition.EQUAL);
@@ -56,6 +55,10 @@ export class AppService {
       throw new HttpException(`You already used your total coupons.`, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * get playercoupon by playerId, today date
+     * Then check the today limit limit.
+     */
     playerCouponFilter = new PlayerCouponFilter();
     playerCouponFilter.player = new PlayerFilter(payload.playerId, SearchCondition.EQUAL);
     playerCouponFilter.redeemAt = new RedeemAtFilter(new Date(new Date().setHours(0, 0, 0)), SearchCondition.BETWEEN);
@@ -66,10 +69,21 @@ export class AppService {
       throw new HttpException(`You already used your daily limit.`, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * get available coupon by playerId and rewardId
+     */
+    const availableCoupon = await this.couponService.getAvailableCouponByPlayerId(payload.playerId, payload.rewardId);
+    if (!availableCoupon) {
+      throw new HttpException(`No coupon available.`, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * create player coupon
+     */
     const addPlayerCouponPayload = new AddPlayerCouponDto();
     addPlayerCouponPayload.playerId = payload.playerId;
     addPlayerCouponPayload.couponId = availableCoupon.id;
-    addPlayerCouponPayload.redeemedAt = new Date();
+    addPlayerCouponPayload.redeemedAt = new Date().toISOString();
     await this.playerCouponService.create(addPlayerCouponPayload);
     const response = new CouponRedeemResponseDto();
     response.id = availableCoupon.id;
