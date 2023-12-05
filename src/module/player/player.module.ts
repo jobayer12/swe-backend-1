@@ -6,9 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Player]),],
+  imports: [TypeOrmModule.forFeature([Player])],
   providers: [PlayerService],
   controllers: [PlayerController],
-  exports: [PlayerService]
+  exports: [PlayerService],
 })
-export class PlayerModule { }
+export class PlayerModule {}

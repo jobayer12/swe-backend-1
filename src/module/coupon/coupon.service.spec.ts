@@ -11,7 +11,6 @@ import { HttpException } from '@nestjs/common';
 describe('CouponService', () => {
   let service: CouponService;
   let couponRepository: Repository<Coupon>;
-  let rewardService: RewardService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,19 +19,20 @@ describe('CouponService', () => {
         {
           provide: RewardService,
           useValue: {
-            get: jest.fn
-          }
+            get: jest.fn,
+          },
         },
         {
           provide: getRepositoryToken(Coupon),
-          useClass: Repository
-        }
+          useClass: Repository,
+        },
       ],
     }).compile();
 
     service = module.get<CouponService>(CouponService);
-    couponRepository = module.get<Repository<Coupon>>(getRepositoryToken(Coupon));
-    rewardService = module.get<RewardService>(RewardService);
+    couponRepository = module.get<Repository<Coupon>>(
+      getRepositoryToken(Coupon),
+    );
   });
 
   it('should be defined', () => {
@@ -47,7 +47,7 @@ describe('CouponService', () => {
       jest.spyOn(couponRepository, 'save').mockResolvedValue(coupons[0]);
       const result = await service.createCoupon(payload);
       expect(result).toEqual(coupons[0]);
-    })
+    });
   });
 
   describe('addCoupon', () => {
@@ -56,7 +56,9 @@ describe('CouponService', () => {
       payload.value = coupons[0].value;
       payload.rewardId = 0;
       jest.spyOn(couponRepository, 'save').mockResolvedValue(coupons[0]);
-      await expect(service.createCoupon(payload)).rejects.toThrow(HttpException);
-    })
+      await expect(service.createCoupon(payload)).rejects.toThrow(
+        HttpException,
+      );
+    });
   });
 });

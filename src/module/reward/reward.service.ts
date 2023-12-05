@@ -8,15 +8,19 @@ import { SearchCondition } from '../../common/enum/SearchCondition';
 
 @Injectable()
 export class RewardService {
-  constructor(@InjectRepository(Reward)
-  private rewardRepository: Repository<Reward>,) { }
-
+  constructor(
+    @InjectRepository(Reward)
+    private rewardRepository: Repository<Reward>,
+  ) {}
 
   async addReward(payload: AddRewardDto): Promise<Reward> {
     try {
       return this.rewardRepository.save(payload);
     } catch (error) {
-      throw new HttpException(`Failed to save reward due to ${error?.message}`, HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException(
+        `Failed to save reward due to ${error?.message}`,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     }
   }
 
@@ -27,7 +31,11 @@ export class RewardService {
       if (filter?.id) {
         if (filter?.id?.condition === SearchCondition.EQUAL) {
           sql.andWhere('reward.id = :id', { id: filter?.id?.value });
-        } else if (filter?.id?.condition === SearchCondition.IN && Array.isArray(filter?.id?.value) && filter?.id?.value?.length > 0) {
+        } else if (
+          filter?.id?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.id?.value) &&
+          filter?.id?.value?.length > 0
+        ) {
           sql.andWhere('reward.id IN :id', { id: filter?.id?.value });
         }
       }
@@ -41,8 +49,8 @@ export class RewardService {
         }
       }
     }
-    console.log(filter)
-    console.log(sql.getSql())
+    console.log(filter);
+    console.log(sql.getSql());
     return sql.getOne();
   }
 }

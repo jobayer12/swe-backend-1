@@ -4,7 +4,6 @@ import { CouponService } from './coupon.service';
 
 describe('CouponController', () => {
   let controller: CouponController;
-  let couponService: CouponService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,7 +19,6 @@ describe('CouponController', () => {
     }).compile();
 
     controller = module.get<CouponController>(CouponController);
-    couponService = module.get<CouponService>(CouponService);
   });
 
   it('should be defined', () => {

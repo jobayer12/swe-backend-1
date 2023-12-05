@@ -23,9 +23,9 @@ import { PlayerModule } from './module/player/player.module';
     CouponModule,
     RewardModule,
     PlayerModule,
-    PlayerCouponModule
+    PlayerCouponModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

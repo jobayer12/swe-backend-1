@@ -6,11 +6,9 @@ import { Coupon } from '../../entities/Coupon';
 
 @Global()
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Coupon]),
-  ],
+  imports: [TypeOrmModule.forFeature([Coupon])],
   controllers: [CouponController],
   providers: [CouponService],
-  exports: [CouponService]
+  exports: [CouponService],
 })
-export class CouponModule { }
+export class CouponModule {}

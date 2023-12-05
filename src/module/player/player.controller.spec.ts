@@ -4,7 +4,6 @@ import { PlayerService } from './player.service';
 
 describe('PlayerController', () => {
   let controller: PlayerController;
-  let playerService: PlayerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,10 +12,10 @@ describe('PlayerController', () => {
         {
           provide: PlayerService,
           useValue: {
-            addPlayer: jest.fn
-          }
-        }
-      ]
+            addPlayer: jest.fn,
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<PlayerController>(PlayerController);

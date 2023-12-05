@@ -9,7 +9,7 @@ import { HttpException } from '@nestjs/common';
 
 describe('PlayerService', () => {
   let service: PlayerService;
-  let playerRepository: Repository<Player>
+  let playerRepository: Repository<Player>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,7 +23,9 @@ describe('PlayerService', () => {
     }).compile();
 
     service = module.get<PlayerService>(PlayerService);
-    playerRepository = module.get<Repository<Player>>(getRepositoryToken(Player))
+    playerRepository = module.get<Repository<Player>>(
+      getRepositoryToken(Player),
+    );
   });
 
   it('should be defined', () => {
@@ -37,7 +39,7 @@ describe('PlayerService', () => {
       jest.spyOn(playerRepository, 'save').mockResolvedValue(players[0]);
       const result = await service.addPlayer(payload);
       expect(result).toEqual(players[0]);
-    })
+    });
   });
 
   describe('addPlayer', () => {
@@ -46,7 +48,7 @@ describe('PlayerService', () => {
       payload.name = null;
       jest.spyOn(playerRepository, 'save').mockResolvedValue(payload[0]);
       await expect(service.addPlayer(payload)).rejects.toThrow(HttpException);
-    })
+    });
   });
 
   describe('getPlayerById', () => {

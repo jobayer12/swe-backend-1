@@ -14,6 +14,11 @@ update your mysql config in `env` file
 $ npm run migration:run
 ```
 
+## Seed
+```bash
+$ npm run seed
+```
+
 ## Running the app
 
 ```bash

@@ -7,8 +7,9 @@ import { validate } from 'class-validator';
 
 @Injectable()
 export class PlayerService {
-
-  constructor(@InjectRepository(Player) private playerRepository: Repository<Player>,) { }
+  constructor(
+    @InjectRepository(Player) private playerRepository: Repository<Player>,
+  ) {}
 
   async getPlayerById(id: number): Promise<Player> {
     try {
@@ -27,7 +28,10 @@ export class PlayerService {
 
       return this.playerRepository.save(payload);
     } catch (error) {
-      throw new HttpException(`Failed to create new player due to ${error?.message}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `Failed to create new player due to ${error?.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

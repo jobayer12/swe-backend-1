@@ -11,4 +11,4 @@ import { PlayerCoupon } from '../../entities/PlayerCoupon';
   providers: [PlayerCouponService],
   exports: [PlayerCouponService],
 })
-export class PlayerCouponModule { }
+export class PlayerCouponModule {}

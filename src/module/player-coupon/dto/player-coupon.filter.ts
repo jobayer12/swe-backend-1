@@ -1,8 +1,8 @@
-import { IsDateString, IsOptional, ValidateNested } from "class-validator";
-import { SearchCondition } from "../../../common/enum/SearchCondition";
-import { BaseFilter } from "../../../common/filter/BaseFilter";
-import { Type } from "class-transformer";
-import { RewardIdFilter } from "../../../module/reward/dto/filter/reward.filter";
+import { IsDateString, IsOptional, ValidateNested } from 'class-validator';
+import { SearchCondition } from '../../../common/enum/SearchCondition';
+import { BaseFilter } from '../../../common/filter/BaseFilter';
+import { Type } from 'class-transformer';
+import { RewardIdFilter } from '../../../module/reward/dto/filter/reward.filter';
 
 export class PlayerFilter extends BaseFilter {
   constructor(value: number | number[], condition: SearchCondition) {

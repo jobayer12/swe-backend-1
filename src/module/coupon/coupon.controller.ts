@@ -5,7 +5,7 @@ import { Coupon } from '../../entities/Coupon';
 
 @Controller('coupon')
 export class CouponController {
-  constructor(private readonly couponService: CouponService) { }
+  constructor(private readonly couponService: CouponService) {}
 
   @Post()
   async createCoupon(@Body() payload: AddCouponDto): Promise<Coupon> {

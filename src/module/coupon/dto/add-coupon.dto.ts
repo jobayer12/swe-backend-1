@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString, MaxLength, Min } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString, MaxLength, Min } from 'class-validator';
 
 export class AddCouponDto {
   @ApiProperty({ example: 'coupon1' })

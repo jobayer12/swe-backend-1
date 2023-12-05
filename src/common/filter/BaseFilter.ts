@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty } from "class-validator";
-import { SearchCondition } from "../enum/SearchCondition";
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { SearchCondition } from '../enum/SearchCondition';
 
 export abstract class BaseFilter {
   constructor(value: any, condition: SearchCondition) {

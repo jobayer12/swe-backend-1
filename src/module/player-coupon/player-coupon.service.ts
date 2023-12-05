@@ -13,13 +13,15 @@ import { validate } from 'class-validator';
 @Injectable()
 export class PlayerCouponService {
   constructor(
-    @InjectRepository(PlayerCoupon) private playerCouponRepository: Repository<PlayerCoupon>,
+    @InjectRepository(PlayerCoupon)
+    private playerCouponRepository: Repository<PlayerCoupon>,
     private readonly playerService: PlayerService,
-    private readonly couponService: CouponService
-  ) { }
+    private readonly couponService: CouponService,
+  ) {}
 
   async get(filter: PlayerCouponFilter): Promise<Array<PlayerCoupon>> {
-    const sql = this.playerCouponRepository.createQueryBuilder('player_coupon')
+    const sql = this.playerCouponRepository
+      .createQueryBuilder('player_coupon')
       .innerJoinAndSelect('player_coupon.player', 'player')
       .innerJoinAndSelect('player_coupon.coupon', 'coupon');
 
@@ -27,32 +29,60 @@ export class PlayerCouponService {
       if (filter?.id) {
         if (filter?.id?.condition === SearchCondition.EQUAL) {
           sql.andWhere('player_coupon.id = :id', { id: filter?.id?.value });
-        } else if (filter?.id?.condition === SearchCondition.IN && Array.isArray(filter?.id?.value) && filter?.id?.value?.length > 0) {
+        } else if (
+          filter?.id?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.id?.value) &&
+          filter?.id?.value?.length > 0
+        ) {
           sql.andWhere('player_coupon.id IN :id', { id: filter?.id?.value });
         }
       }
 
       if (filter?.player) {
         if (filter?.player?.condition === SearchCondition.EQUAL) {
-          sql.andWhere('player_coupon.playerId = :playerId', { playerId: filter?.player?.value });
-        } else if (filter?.player?.condition === SearchCondition.IN && Array.isArray(filter?.player?.value) && filter?.player?.value?.length > 0) {
-          sql.andWhere('player_coupon.playerId IN :playerId', { playerId: filter?.player?.value });
+          sql.andWhere('player_coupon.playerId = :playerId', {
+            playerId: filter?.player?.value,
+          });
+        } else if (
+          filter?.player?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.player?.value) &&
+          filter?.player?.value?.length > 0
+        ) {
+          sql.andWhere('player_coupon.playerId IN :playerId', {
+            playerId: filter?.player?.value,
+          });
         }
       }
 
       if (filter?.coupon) {
         if (filter?.player?.condition === SearchCondition.EQUAL) {
-          sql.andWhere('player_coupon.couponId = :couponId', { couponId: filter?.coupon?.value });
-        } else if (filter?.player?.condition === SearchCondition.IN && Array.isArray(filter?.coupon?.value) && filter?.coupon?.value?.length > 0) {
-          sql.andWhere('player_coupon.couponId IN :couponId', { couponId: filter?.coupon?.value });
+          sql.andWhere('player_coupon.couponId = :couponId', {
+            couponId: filter?.coupon?.value,
+          });
+        } else if (
+          filter?.player?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.coupon?.value) &&
+          filter?.coupon?.value?.length > 0
+        ) {
+          sql.andWhere('player_coupon.couponId IN :couponId', {
+            couponId: filter?.coupon?.value,
+          });
         }
       }
 
       if (filter?.reward) {
         if (filter?.player?.condition === SearchCondition.EQUAL) {
-          sql.andWhere('coupon.rewardId = :rewardId', { rewardId: filter?.reward?.value });
-        } else if (filter?.player?.condition === SearchCondition.IN && Array.isArray(filter?.reward?.value) && filter?.reward?.value?.length > 0) {
-          sql.andWhere('coupon.rewardId IN :rewardId', { rewardId: filter?.reward?.value });
+          sql.andWhere('coupon.rewardId = :rewardId', {
+            rewardId: filter?.reward?.value,
+          });
+        } else if (
+          filter?.player?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.reward?.value) &&
+          filter?.reward?.value?.length > 0
+        ) {
+          sql.andWhere('coupon.rewardId IN :rewardId', {
+            rewardId: filter?.reward?.value,
+          });
         }
       }
 
@@ -91,7 +121,10 @@ export class PlayerCouponService {
       playerCoupon.redeemedAt = new Date();
       return this.playerCouponRepository.save(playerCoupon);
     } catch (e) {
-      throw new HttpException(`Failed to create player coupon due to ${e?.message}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `Failed to create player coupon due to ${e?.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

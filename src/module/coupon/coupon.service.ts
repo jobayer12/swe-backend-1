@@ -4,7 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AddCouponDto } from './dto/add-coupon.dto';
 import { RewardService } from '../reward/reward.service';
-import { RewardFilter, RewardIdFilter } from '../reward/dto/filter/reward.filter';
+import {
+  RewardFilter,
+  RewardIdFilter,
+} from '../reward/dto/filter/reward.filter';
 import { SearchCondition } from '../../common/enum/SearchCondition';
 import { CouponFilter } from './dto/coupon.filter';
 import { PlayerCoupon } from '../../entities/PlayerCoupon';
@@ -12,8 +15,10 @@ import { validate } from 'class-validator';
 
 @Injectable()
 export class CouponService {
-  constructor(@InjectRepository(Coupon) private couponRepository: Repository<Coupon>,
-    private readonly rewardService: RewardService) { }
+  constructor(
+    @InjectRepository(Coupon) private couponRepository: Repository<Coupon>,
+    private readonly rewardService: RewardService,
+  ) {}
 
   async getCoupon(filter: CouponFilter): Promise<Array<Coupon>> {
     const sql = this.couponRepository
@@ -24,7 +29,11 @@ export class CouponService {
       if (filter?.id) {
         if (filter?.id?.condition === SearchCondition.EQUAL) {
           sql.andWhere('coupon.id = :id', { id: filter?.id?.value });
-        } else if (filter?.id?.condition === SearchCondition.IN && Array.isArray(filter?.id?.value) && filter?.id?.value?.length > 0) {
+        } else if (
+          filter?.id?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.id?.value) &&
+          filter?.id?.value?.length > 0
+        ) {
           sql.andWhere('coupon.id IN :id', { id: filter?.id?.value });
         }
       }
@@ -32,7 +41,11 @@ export class CouponService {
       if (filter?.reward) {
         if (filter?.id?.condition === SearchCondition.EQUAL) {
           sql.andWhere('coupon.rewardId = :id', { id: filter?.reward?.value });
-        } else if (filter?.reward?.condition === SearchCondition.IN && Array.isArray(filter?.reward?.value) && filter?.reward?.value?.length > 0) {
+        } else if (
+          filter?.reward?.condition === SearchCondition.IN &&
+          Array.isArray(filter?.reward?.value) &&
+          filter?.reward?.value?.length > 0
+        ) {
           sql.andWhere('coupon.rewardId IN :id', { id: filter?.reward?.value });
         }
       }
@@ -40,11 +53,14 @@ export class CouponService {
     return sql.getMany();
   }
 
-  async getAvailableCouponByPlayerId(playerId: number, rewardId: number): Promise<Coupon> {
+  async getAvailableCouponByPlayerId(
+    playerId: number,
+    rewardId: number,
+  ): Promise<Coupon> {
     return this.couponRepository
       .createQueryBuilder('coupon')
       .where(`coupon.rewardId = ${rewardId}`)
-      .andWhere(qb => {
+      .andWhere((qb) => {
         const subQuery = qb
           .subQuery()
           .select('player_coupon.couponId')
@@ -52,7 +68,8 @@ export class CouponService {
           .where(`player_coupon.playerId = ${playerId}`)
           .getQuery();
         return `coupon.id NOT IN ${subQuery}`;
-      }).getOne();
+      })
+      .getOne();
   }
 
   async createCoupon(payload: AddCouponDto): Promise<Coupon> {
@@ -73,7 +90,10 @@ export class CouponService {
       coupon.Reward = reward;
       return this.couponRepository.save(coupon);
     } catch (error) {
-      throw new HttpException(`Failed to save coupon due to ${error?.message}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `Failed to save coupon due to ${error?.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

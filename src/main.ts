@@ -9,7 +9,6 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
     }),
-
   );
   const options = new DocumentBuilder()
     .setTitle('Player coupon redeem')

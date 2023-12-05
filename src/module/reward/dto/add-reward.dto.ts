@@ -1,7 +1,13 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
-import { ApiProperty } from "@nestjs/swagger";
-import { Transform, TransformFnParams } from "class-transformer";
-import { IsDateString, IsNumber, IsString, MaxLength, Min } from "class-validator";
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform, TransformFnParams } from 'class-transformer';
+import {
+  IsDateString,
+  IsNumber,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class AddRewardDto {
   @ApiProperty({ example: 'Airline ticket' })
@@ -10,22 +16,30 @@ export class AddRewardDto {
   name: string;
 
   @ApiProperty({
-    example: new Date(
-      new Date().setUTCHours(0, 0, 0, 0)
-    )
+    example: new Date(new Date().setUTCHours(0, 0, 0, 0)),
   })
   @IsDateString()
   startDate: Date;
 
   @ApiProperty({
     example: new Date(
-      new Date(new Date().setDate(new Date().getDate() + 7)).setUTCHours(23, 59, 59)
-    )
+      new Date(new Date().setDate(new Date().getDate() + 7)).setUTCHours(
+        23,
+        59,
+        59,
+      ),
+    ),
   })
   @IsDateString()
   @Transform((params: TransformFnParams) => {
-    if (new Date(params.obj.startDate).valueOf() > new Date(params.value).valueOf()) {
-      throw new HttpException(`startDate must be less than ${params.key}`, HttpStatus.BAD_REQUEST);
+    if (
+      new Date(params.obj.startDate).valueOf() >
+      new Date(params.value).valueOf()
+    ) {
+      throw new HttpException(
+        `startDate must be less than ${params.key}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return params.value;
   })
@@ -39,11 +53,14 @@ export class AddRewardDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   @Min(1)
-  @Transform(((params: TransformFnParams) => {
+  @Transform((params: TransformFnParams) => {
     if (+params.obj.perDayLimit > +params.value) {
-      throw new HttpException(`perDayLimit must be less than ${params.key}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `perDayLimit must be less than ${params.key}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return params.value;
-  }))
+  })
   totalLimit: number;
 }

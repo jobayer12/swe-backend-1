@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { RewardService } from './reward.service';
 import { Reward } from '../../entities/Reward';
 import { AddRewardDto } from './dto/add-reward.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 
 describe('RewardService', () => {
   let rewardService: RewardService;
@@ -23,7 +23,9 @@ describe('RewardService', () => {
     }).compile();
 
     rewardService = moduleFixture.get<RewardService>(RewardService);
-    rewardRepository = moduleFixture.get<Repository<Reward>>(getRepositoryToken(Reward));
+    rewardRepository = moduleFixture.get<Repository<Reward>>(
+      getRepositoryToken(Reward),
+    );
   });
 
   describe('addReward', () => {
@@ -50,7 +52,9 @@ describe('RewardService', () => {
         perDayLimit: 3,
         totalLimit: 21,
       };
-      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(HttpException);
+      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(
+        HttpException,
+      );
     });
 
     it('should throw an exception for perDayLimit exceeding totalLimit', async () => {
@@ -61,7 +65,9 @@ describe('RewardService', () => {
         perDayLimit: 4,
         totalLimit: 3,
       };
-      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(HttpException);
+      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(
+        HttpException,
+      );
     });
 
     it('should throw an exception for negative perDayLimit', async () => {
@@ -72,7 +78,9 @@ describe('RewardService', () => {
         perDayLimit: -1,
         totalLimit: 21,
       };
-      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(HttpException);
+      await expect(rewardService.addReward(invalidPayload)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 });

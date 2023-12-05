@@ -1,14 +1,14 @@
-import { Type } from "class-transformer";
-import { BaseFilter } from "../../../../common/filter/BaseFilter";
-import { IsDateString, IsOptional, ValidateNested } from "class-validator";
-import { SearchCondition } from "../../../../common/enum/SearchCondition";
+import { Type } from 'class-transformer';
+import { BaseFilter } from '../../../../common/filter/BaseFilter';
+import { IsDateString, IsOptional, ValidateNested } from 'class-validator';
+import { SearchCondition } from '../../../../common/enum/SearchCondition';
 
 export class RewardIdFilter extends BaseFilter {
   constructor(value: number | number[], condition: SearchCondition) {
     super(value, condition);
   }
 
-  value: number | number[]
+  value: number | number[];
 }
 
 export class RewardDate {
